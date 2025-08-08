@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EMPATIZAR.IO</title>
+    <style>
+        body {
+            font-family: 'Times New Roman', serif;
+            background-color: #000;
+            color: #fff;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+        }
+        h1 {
+            color: #FFD700;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.7);
+            font-size: 2.5em;
+        }
+        .game-container {
+            display: flex;
+            justify-content: space-around;
+            margin: 30px auto;
+            max-width: 900px;
+        }
+        .column {
+            width: 45%;
+            min-height: 500px;
+            padding: 15px;
+            border-radius: 20px;
+            background-color: #222;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+            border: 2px solid #444;
+        }
+        .left-column {
+            border-color: #FF6347;
+        }
+        .right-column {
+            border-color: #4682B4;
+        }
+        .concept, .word {
+            padding: 12px;
+            margin: 10px;
+            border-radius: 15px;
+            cursor: grab;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        .concept {
+            background: #FF6347;
+            color: white;
+        }
+        .word {
+            background: #4682B4;
+            color: white;
+        }
+        .concept:hover, .word:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+        .matched {
+            opacity: 0.5;
+            cursor: default;
+            background: #555 !important;
+        }
+        .feedback {
+            font-weight: bold;
+            margin: 20px;
+            font-size: 24px;
+            color: #FFD700;
+            min-height: 40px;
+        }
+        .level-buttons button {
+            padding: 12px 25px;
+            margin: 10px;
+            border: none;
+            border-radius: 50px;
+            background: #333;
+            color: #FFD700;
+            cursor: pointer;
+            font-family: 'Times New Roman', serif;
+            font-size: 1.1em;
+            transition: all 0.3s;
+        }
+        .level-buttons button:hover {
+            background: #FFD700;
+            color: #000;
+            transform: scale(1.1);
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.7);
+        }
+        .scoreboard {
+            display: flex;
+            justify-content: center;
+            gap: 50px;
+            margin: 20px;
+        }
+        .score-box {
+            background: #333;
+            border-radius: 15px;
+            padding: 15px;
+            width: 150px;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+        }
+        .score-title {
+            font-weight: bold;
+            color: #FFD700;
+            margin-bottom: 10px;
+        }
+        .score-value {
+            font-size: 24px;
+        }
+        .happy-face, .sad-face {
+            font-size: 30px;
+            margin: 5px;
+        }
+        .happy-face {
+            color: #4CAF50;
+        }
+        .sad-face {
+            color: #FF6347;
+        }
+        .results {
+            background: #333;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px auto;
+            max-width: 500px;
+            display: none;
+        }
+        .restart-btn {
+            padding: 12px 25px;
+            background: #FFD700;
+            color: #000;
+            border: none;
+            border-radius: 50px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            font-size: 1.1em;
+            transition: all 0.3s;
+        }
+        .restart-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.7);
+        }
+        .language-buttons {
+            margin: 20px 0;
+        }
+        .language-buttons button {
+            padding: 8px 15px;
+            margin: 0 5px;
+            background: #333;
+            color: #FFD700;
+            border: 1px solid #FFD700;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .language-buttons button:hover {
+            background: #FFD700;
+            color: #000;
+        }
+        .description {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #222;
+            border-radius: 10px;
+            text-align: left;
+            line-height: 1.6;
+        }
+        .description h2 {
+            color: #FFD700;
+            text-align: center;
+        }
+        .benefits {
+            margin-top: 20px;
+        }
+        .benefits ul {
+            padding-left: 20px;
+        }
+        .benefits li {
+            margin-bottom: 10px;
+        }
+        footer {
+            background-color: #000;
+            color: #ccc;
+            padding: 30px 20px;
+            font-size: 0.8rem;
+            text-align: center;
+            line-height: 1.5;
+            border-top: 2px solid #ff6f00;
+            margin-top: 40px;
+            font-family: 'Playfair Display', serif;
+        }
+        footer strong {
+            color: #fff;
+            font-weight: 700;
+        }
+        footer em {
+            color: #ffa726;
+            font-style: normal;
+            font-weight: 400;
+        }
+        footer a {
+            color: #F6BE00;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        footer a:hover {
+            text-decoration: underline;
+        }
+        .enlaces-footer {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        .enlaces-footer a {
+            white-space: nowrap;
+        }
+    </style>
+</head>
+<body>
+    <div class="language-buttons">
+        <button onclick="changeLanguage('es')">Español</button>
+        <button onclick="changeLanguage('en')">English</button>
+        <button onclick="changeLanguage('fr')">Français</button>
+    </div>
+    
+    <h1 id="title">EMPATIZAR.IO</h1>
+    <p id="subtitle">¡Gana puntos por cada acierto y demuestra tu inteligencia emocional!</p>
+    
+    <div class="description">
+        <h2 id="description-title">Sobre esta herramienta</h2>
+        <p id="description-text">EMPATIZAR.IO es un juego interactivo diseñado para desarrollar y fortalecer la inteligencia emocional a través de la identificación y asociación de conceptos emocionales. Esta herramienta educativa ayuda a reconocer, comprender y gestionar emociones propias y ajenas, mejorando las habilidades sociales y la empatía.</p>
+        
+        <div class="benefits">
+            <h3 id="benefits-title">Beneficios:</h3>
+            <ul id="benefits-list">
+                <li>Desarrolla la capacidad de reconocer emociones en uno mismo y en los demás</li>
+                <li>Mejora las habilidades de comunicación emocional</li>
+                <li>Fomenta la empatía y la comprensión interpersonal</li>
+                <li>Proporciona un marco para discutir emociones complejas</li>
+                <li>Adaptable a diferentes grupos de edad y contextos educativos</li>
+            </ul>
+        </div>
+    </div>
+    
+    <div class="level-buttons">
+        <button onclick="setLevel('kids')" id="kids-btn">Niños (10 pares)</button>
+        <button onclick="setLevel('teens')" id="teens-btn">Jóvenes (15 pares)</button>
+        <button onclick="setLevel('adults')" id="adults-btn">Adultos (20 pares)</button>
+    </div>
+    
+    <div class="scoreboard">
+        <div class="score-box">
+            <div class="score-title" id="correct-title">Aciertos</div>
+            <div class="happy-face">😊</div>
+            <div class="score-value" id="correct-score">0</div>
+        </div>
+        <div class="score-box">
+            <div class="score-title" id="wrong-title">Errores</div>
+            <div class="sad-face">😢</div>
+            <div class="score-value" id="wrong-score">0</div>
+        </div>
+    </div>
+    
+    <div class="game-container">
+        <div class="column left-column" id="concepts"></div>
+        <div class="column right-column" id="words"></div>
+    </div>
+    
+    <div class="feedback" id="feedback"></div>
+    
+    <div class="results" id="results">
+        <h2 id="results-title">🏆 Resultado Final 🏆</h2>
+        <p id="final-score"></p>
+        <p id="final-message"></p>
+        <button class="restart-btn" onclick="restartGame()" id="restart-btn">¡Jugar de nuevo!</button>
+    </div>
+    
+    <footer>
+        © 2024-2025 — Herramientas del Proyecto de Investigación: <strong>*Emociones en el Aula*</strong><br>
+        Propuesta educativa y cultural creada por <strong>Yobana Orozco Benavides</strong>, Escritora | Docente | Gestora de proyectos artísticos y pedagógicos<br><br>
+        
+        Licencia: 
+        <em>Creative Commons Atribución-NoComercial 4.0 Internacional (CC BY-NC 4.0)</em>
+        <span class="cc-logo">
+            <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">
+                <img src="https://mirrors.creativecommons.org/presskit/icons/cc.svg" alt="CC Logo">
+            </a>
+        </span>
+        <br>
+        Uso libre con fines educativos — <strong>prohibido uso comercial</strong><br><br>
+
+        Más información de la autora: 
+        <a href="https://yobanaorozcoartista.bio.link/" target="_blank" rel="noopener">yobanaorozcoartista.bio.link</a>
+
+        <div class="enlaces-footer">
+            <a href="https://orcid.org/0009-0002-9253-6429" target="_blank">ORCID</a>
+            <a href="https://www.webofscience.com/wos/?mode=Nextgen&path=%2Fwos%2Fauthor%2Frecord%2FLLM-9647-2024&IsProductCode=Yes&Init=Yes&DestApp=UA&Func=Frame&action=transfer&SrcApp=CR&SID=USW2EC0AFFb0eJYIUmqxKCgZWIVbn" target="_blank">Web of Science</a>
+            <a href="https://account.ncbi.nlm.nih.gov/?back_url=https%3A%2F%2Fwww.ncbi.nlm.nih.gov%2Fmyncbi%2F" target="_blank">NCBI</a>
+            <a href="https://es.slideshare.net/YOBANAOROZCO" target="_blank">SlideShare</a>
+            <a href="https://hq.ssrn.com/login/authentication.cfm?rectype=edit&perinf=y&partid=7786766" target="_blank">SSRN</a>
+            <a href="https://www.researchgate.net/" target="_blank">ResearchGate</a>
+            <a href="https://siise.bibliotecanacional.gov.co/siise/Login?ReturnUrl=%2fsiise%2fSeleccionAdquisiciones%2fSolicitudISSN%2fIndex" target="_blank">SIISE</a>
+            <a href="https://scientificrc.org/index.php/src/login?source=%2Findex.php%2Fsrc%2Fsubmission%2Fwizard" target="_blank">Scientific RC</a>
+            <a href="https://www.openaire.eu/annual-reports" target="_blank">OpenAIRE</a>
+            <a href="https://zenodo.org/" target="_blank">Zenodo</a>
+            <a href="https://sso.anii.org.uy/oxauth/login.htm" target="_blank">ANII</a>
+            <a href="https://rizoma.conahcyt.mx/acerca-de-mi/mi-perfil" target="_blank">Rizoma CONAHCYT</a>
+            <a href="https://papersubmission.scirp.org/paper/showAddPaper" target="_blank">SCIRP Submission</a>
+            <a href="https://utolima.academia.edu/YOBANAOROZCOBENAVIDES" target="_blank">Academia.edu</a>
+            <a href="https://www.studocu.com/co/user/yobana-orozco-benavides/15382735?origin=user-menu" target="_blank">Studocu</a>
+            <a href="https://www.calameo.com/accounts/7997056" target="_blank">Calameo</a>
+            <a href="https://www.amazon.com.mx/stores/YOBANA-OROZCO-BENAVIDES/author/B0CZG5RS1T?ref=ap_rdr&isDramIntegrated=true&shoppingPortalEnabled=true" target="_blank">Amazon</a>
+        </div>
+    </footer>
+    
+    <script>
+        // Language translations
+        const translations = {
+            es: {
+                title: "EMPATIZAR.IO",
+                subtitle: "¡Gana puntos por cada acierto y demuestra tu inteligencia emocional!",
+                descriptionTitle: "Sobre esta herramienta",
+                descriptionText: "EMPATIZAR.IO es un juego interactivo diseñado para desarrollar y fortalecer la inteligencia emocional a través de la identificación y asociación de conceptos emocionales. Esta herramienta educativa ayuda a reconocer, comprender y gestionar emociones propias y ajenas, mejorando las habilidades sociales y la empatía.",
+                benefitsTitle: "Beneficios:",
+                benefitsList: [
+                    "Desarrolla la capacidad de reconocer emociones en uno mismo y en los demás",
+                    "Mejora las habilidades de comunicación emocional",
+                    "Fomenta la empatía y la comprensión interpersonal",
+                    "Proporciona un marco para discutir emociones complejas",
+                    "Adaptable a diferentes grupos de edad y contextos educativos"
+                ],
+                kidsBtn: "Niños (10 pares)",
+                teensBtn: "Jóvenes (15 pares)",
+                adultsBtn: "Adultos (20 pares)",
+                correctTitle: "Aciertos",
+                wrongTitle: "Errores",
+                resultsTitle: "🏆 Resultado Final 🏆",
+                restartBtn: "¡Jugar de nuevo!"
+            },
+            en: {
+                title: "EMPATHIZE.IO",
+                subtitle: "Earn points for each correct match and demonstrate your emotional intelligence!",
+                descriptionTitle: "About this tool",
+                descriptionText: "EMPATHIZE.IO is an interactive game designed to develop and strengthen emotional intelligence through the identification and association of emotional concepts. This educational tool helps recognize, understand and manage one's own and others' emotions, improving social skills and empathy.",
+                benefitsTitle: "Benefits:",
+                benefitsList: [
+                    "Develops the ability to recognize emotions in oneself and others",
+                    "Improves emotional communication skills",
+                    "Fosters empathy and interpersonal understanding",
+                    "Provides a framework for discussing complex emotions",
+                    "Adaptable to different age groups and educational contexts"
+                ],
+                kidsBtn: "Kids (10 pairs)",
+                teensBtn: "Teens (15 pairs)",
+                adultsBtn: "Adults (20 pairs)",
+                correctTitle: "Correct",
+                wrongTitle: "Wrong",
+                resultsTitle: "🏆 Final Results 🏆",
+                restartBtn: "Play again!"
+            },
+            fr: {
+                title: "EMPATHISER.IO",
+                subtitle: "Gagnez des points pour chaque bonne réponse et démontrez votre intelligence émotionnelle!",
+                descriptionTitle: "À propos de cet outil",
+                descriptionText: "EMPATHISER.IO est un jeu interactif conçu pour développer et renforcer l'intelligence émotionnelle grâce à l'identification et à l'association de concepts émotionnels. Cet outil éducatif aide à reconnaître, comprendre et gérer ses propres émotions et celles des autres, améliorant ainsi les compétences sociales et l'empathie.",
+                benefitsTitle: "Avantages:",
+                benefitsList: [
+                    "Développe la capacité à reconnaître les émotions chez soi et chez les autres",
+                    "Améliore les compétences de communication émotionnelle",
+                    "Favorise l'empathie et la compréhension interpersonnelle",
+                    "Fournit un cadre pour discuter des émotions complexes",
+                    "Adaptable à différents groupes d'âge et contextes éducatifs"
+                ],
+                kidsBtn: "Enfants (10 paires)",
+                teensBtn: "Adolescents (15 paires)",
+                adultsBtn: "Adultes (20 paires)",
+                correctTitle: "Correctes",
+                wrongTitle: "Erreurs",
+                resultsTitle: "🏆 Résultats Finaux 🏆",
+                restartBtn: "Rejouer!"
+            }
+        };
+
+        // Game data with translations
+        const gameData = {
+            es: {
+                kids: {
+                    concepts: [
+                        "Ponerse en el lugar del otro", "Sentir pena por alguien", "Ayudar a quien lo necesita",
+                        "Sonreír cuando alguien está feliz", "Decir 'lo siento' cuando alguien llora",
+                        "Compartir tus juguetes", "Escuchar sin interrumpir", "Preguntar '¿cómo estás?'",
+                        "Hacer un dibujo para animar a alguien", "Dar un abrazo si alguien está triste"
+                    ],
+                    words: [
+                        "Empatía", "Compasión", "Simpatía", "Amabilidad", "Solidaridad",
+                        "Respeto", "Escucha activa", "Atención", "Creatividad", "Afecto físico"
+                    ],
+                    pairs: {
+                        "Ponerse en el lugar del otro": "Empatía",
+                        "Sentir pena por alguien": "Simpatía",
+                        "Ayudar a quien lo necesita": "Compasión",
+                        "Sonreír cuando alguien está feliz": "Amabilidad",
+                        "Decir 'lo siento' cuando alguien llora": "Solidaridad",
+                        "Compartir tus juguetes": "Respeto",
+                        "Escuchar sin interrumpir": "Escucha activa",
+                        "Preguntar '¿cómo estás?'": "Atención",
+                        "Hacer un dibujo para animar a alguien": "Creatividad",
+                        "Dar un abrazo si alguien está triste": "Afecto físico"
+                    }
+                },
+                teens: {
+                    concepts: [
+                        "Entender la mente de alguien sin sentir lo mismo", "Quedarse estancado en reglas propias",
+                        "Sentir el dolor ajeno como propio", "Analizar las emociones de otros racionalmente",
+                        "Ignorar perspectivas diferentes", "Conmoverse con el sufrimiento ajeno",
+                        "Ayudar solo por obligación", "Reflexionar antes de juzgar",
+                        "Criticar sin conocer la situación completa", "Actuar para aliviar el dolor de otros",
+                        "Evitar el contacto emocional", "Recordar experiencias similares propias",
+                        "Fingir interés en los demás", "Acompañar sin necesidad de hablar",
+                        "Validar los sentimientos de otros"
+                    ],
+                    words: [
+                        "Empatía cognitiva", "Rigidez emocional", "Empatía afectiva", "Análisis emocional",
+                        "Prejuicio", "Conmoción", "Ayuda forzada", "Reflexión", "Crítica injusta",
+                        "Acción compasiva", "Distancia emocional", "Memoria emocional", "Falsedad",
+                        "Acompañamiento", "Validación"
+                    ],
+                    pairs: {
+                        "Entender la mente de alguien sin sentir lo mismo": "Empatía cognitiva",
+                        "Quedarse estancado en reglas propias": "Rigidez emocional",
+                        "Sentir el dolor ajeno como propio": "Empatía afectiva",
+                        "Analizar las emociones de otros racionalmente": "Análisis emocional",
+                        "Ignorar perspectivas diferentes": "Prejuicio",
+                        "Conmoverse con el sufrimiento ajeno": "Conmoción",
+                        "Ayudar solo por obligación": "Ayuda forzada",
+                        "Reflexionar antes de juzgar": "Reflexión",
+                        "Criticar sin conocer la situación completa": "Crítica injusta",
+                        "Actuar para aliviar el dolor de otros": "Acción compasiva",
+                        "Evitar el contacto emocional": "Distancia emocional",
+                        "Recordar experiencias similares propias": "Memoria emocional",
+                        "Fingir interés en los demás": "Falsedad",
+                        "Acompañar sin necesidad de hablar": "Acompañamiento",
+                        "Validar los sentimientos de otros": "Validación"
+                    }
+                },
+                adults: {
+                    concepts: [
+                        "Focalización en uno mismo bajo presión", "Acción motivada por el entendimiento emocional",
+                        "Etiquetar a otros sin profundizar", "Priorizar tareas sobre relaciones",
+                        "Practicar la escucha sin distracciones", "Asumir que todos piensan igual",
+                        "Reconocer emociones complejas en otros", "Culpar antes de comprender",
+                        "Ofrecer soluciones sin escuchar", "Meditar para regular respuestas emocionales",
+                        "Negar los sentimientos ajenos", "Crear espacios seguros para expresarse",
+                        "Juzgar basado en experiencias pasadas", "Adaptar la comunicación al estado emocional del otro",
+                        "Desconectarse de emociones incómodas", "Aprender de culturas emocionales diferentes",
+                        "Responder con irritación al dolor ajeno", "Fomentar la autocrítica saludable",
+                        "Ignorar señales no verbales", "Construir puentes entre perspectivas opuestas"
+                    ],
+                    words: [
+                        "Estrés", "Empatía compasiva", "Juicio", "Productividad tóxica", "Presencia",
+                        "Sesgo", "Percepción emocional", "Culpa", "Soluciones prematuras", "Mindfulness",
+                        "Invalidación", "Seguridad emocional", "Proyección", "Comunicación adaptativa",
+                        "Evitación", "Apertura cultural", "Frustración", "Autoconocimiento",
+                        "Ceguera emocional", "Mediación"
+                    ],
+                    pairs: {
+                        "Focalización en uno mismo bajo presión": "Estrés",
+                        "Acción motivada por el entendimiento emocional": "Empatía compasiva",
+                        "Etiquetar a otros sin profundizar": "Juicio",
+                        "Priorizar tareas sobre relaciones": "Productividad tóxica",
+                        "Practicar la escucha sin distracciones": "Presencia",
+                        "Asumir que todos piensan igual": "Sesgo",
+                        "Reconocer emociones complejas en otros": "Percepción emocional",
+                        "Culpar antes de comprender": "Culpa",
+                        "Ofrecer soluciones sin escuchar": "Soluciones prematuras",
+                        "Meditar para regular respuestas emocionales": "Mindfulness",
+                        "Negar los sentimientos ajenos": "Invalidación",
+                        "Crear espacios seguros para expresarse": "Seguridad emocional",
+                        "Juzgar basado en experiencias pasadas": "Proyección",
+                        "Adaptar la comunicación al estado emocional del otro": "Comunicación adaptativa",
+                        "Desconectarse de emociones incómodas": "Evitación",
+                        "Aprender de culturas emocionales diferentes": "Apertura cultural",
+                        "Responder con irritación al dolor ajeno": "Frustración",
+                        "Fomentar la autocrítica saludable": "Autoconocimiento",
+                        "Ignorar señales no verbales": "Ceguera emocional",
+                        "Construir puentes entre perspectivas opuestas": "Mediación"
+                    }
+                }
+            },
+            en: {
+                kids: {
+                    concepts: [
+                        "Put yourself in someone else's shoes", "Feeling sorry for someone", "Helping those in need",
+                        "Smiling when someone is happy", "Saying 'I'm sorry' when someone cries",
+                        "Sharing your toys", "Listening without interrupting", "Asking 'how are you?'",
+                        "Making a drawing to cheer someone up", "Giving a hug if someone is sad"
+                    ],
+                    words: [
+                        "Empathy", "Compassion", "Sympathy", "Kindness", "Solidarity",
+                        "Respect", "Active listening", "Attention", "Creativity", "Physical affection"
+                    ],
+                    pairs: {
+                        "Put yourself in someone else's shoes": "Empathy",
+                        "Feeling sorry for someone": "Sympathy",
+                        "Helping those in need": "Compassion",
+                        "Smiling when someone is happy": "Kindness",
+                        "Saying 'I'm sorry' when someone cries": "Solidarity",
+                        "Sharing your toys": "Respect",
+                        "Listening without interrupting": "Active listening",
+                        "Asking 'how are you?'": "Attention",
+                        "Making a drawing to cheer someone up": "Creativity",
+                        "Giving a hug if someone is sad": "Physical affection"
+                    }
+                },
+                teens: {
+                    concepts: [
+                        "Understanding someone's mind without feeling the same", "Getting stuck in one's own rules",
+                        "Feeling others' pain as your own", "Analyzing others' emotions rationally",
+                        "Ignoring different perspectives", "Being moved by others' suffering",
+                        "Helping only out of obligation", "Reflecting before judging",
+                        "Criticizing without knowing the full situation", "Acting to relieve others' pain",
+                        "Avoiding emotional contact", "Remembering similar personal experiences",
+                        "Faking interest in others", "Accompanying without needing to talk",
+                        "Validating others' feelings"
+                    ],
+                    words: [
+                        "Cognitive empathy", "Emotional rigidity", "Affective empathy", "Emotional analysis",
+                        "Prejudice", "Emotional shock", "Forced help", "Reflection", "Unfair criticism",
+                        "Compassionate action", "Emotional distance", "Emotional memory", "Falseness",
+                        "Companionship", "Validation"
+                    ],
+                    pairs: {
+                        "Understanding someone's mind without feeling the same": "Cognitive empathy",
+                        "Getting stuck in one's own rules": "Emotional rigidity",
+                        "Feeling others' pain as your own": "Affective empathy",
+                        "Analyzing others' emotions rationally": "Emotional analysis",
+                        "Ignoring different perspectives": "Prejudice",
+                        "Being moved by others' suffering": "Emotional shock",
+                        "Helping only out of obligation": "Forced help",
+                        "Reflecting before judging": "Reflection",
+                        "Criticizing without knowing the full situation": "Unfair criticism",
+                        "Acting to relieve others' pain": "Compassionate action",
+                        "Avoiding emotional contact": "Emotional distance",
+                        "Remembering similar personal experiences": "Emotional memory",
+                        "Faking interest in others": "Falseness",
+                        "Accompanying without needing to talk": "Companionship",
+                        "Validating others' feelings": "Validation"
+                    }
+                },
+                adults: {
+                    concepts: [
+                        "Focusing on oneself under pressure", "Action motivated by emotional understanding",
+                        "Labeling others without depth", "Prioritizing tasks over relationships",
+                        "Practicing listening without distractions", "Assuming everyone thinks the same",
+                        "Recognizing complex emotions in others", "Blaming before understanding",
+                        "Offering solutions without listening", "Meditating to regulate emotional responses",
+                        "Denying others' feelings", "Creating safe spaces to express oneself",
+                        "Judging based on past experiences", "Adapting communication to others' emotional state",
+                        "Disconnecting from uncomfortable emotions", "Learning from different emotional cultures",
+                        "Responding with irritation to others' pain", "Encouraging healthy self-criticism",
+                        "Ignoring nonverbal signals", "Building bridges between opposing perspectives"
+                    ],
+                    words: [
+                        "Stress", "Compassionate empathy", "Judgment", "Toxic productivity", "Presence",
+                        "Bias", "Emotional perception", "Guilt", "Premature solutions", "Mindfulness",
+                        "Invalidation", "Emotional safety", "Projection", "Adaptive communication",
+                        "Avoidance", "Cultural openness", "Frustration", "Self-knowledge",
+                        "Emotional blindness", "Mediation"
+                    ],
+                    pairs: {
+                        "Focusing on oneself under pressure": "Stress",
+                        "Action motivated by emotional understanding": "Compassionate empathy",
+                        "Labeling others without depth": "Judgment",
+                        "Prioritizing tasks over relationships": "Toxic productivity",
+                        "Practicing listening without distractions": "Presence",
+                        "Assuming everyone thinks the same": "Bias",
+                        "Recognizing complex emotions in others": "Emotional perception",
+                        "Blaming before understanding": "Guilt",
+                        "Offering solutions without listening": "Premature solutions",
+                        "Meditating to regulate emotional responses": "Mindfulness",
+                        "Denying others' feelings": "Invalidation",
+                        "Creating safe spaces to express oneself": "Emotional safety",
+                        "Judging based on past experiences": "Projection",
+                        "Adapting communication to others' emotional state": "Adaptive communication",
+                        "Disconnecting from uncomfortable emotions": "Avoidance",
+                        "Learning from different emotional cultures": "Cultural openness",
+                        "Responding with irritation to others' pain": "Frustration",
+                        "Encouraging healthy self-criticism": "Self-knowledge",
+                        "Ignoring nonverbal signals": "Emotional blindness",
+                        "Building bridges between opposing perspectives": "Mediation"
+                    }
+                }
+            },
+            fr: {
+                kids: {
+                    concepts: [
+                        "Se mettre à la place de l'autre", "Ressentir de la peine pour quelqu'un", "Aider ceux qui en ont besoin",
+                        "Sourire quand quelqu'un est heureux", "Dire 'je suis désolé' quand quelqu'un pleure",
+                        "Partager ses jouets", "Écouter sans interrompre", "Demander 'comment ça va?'",
+                        "Faire un dessin pour remonter le moral", "Faire un câlin si quelqu'un est triste"
+                    ],
+                    words: [
+                        "Empathie", "Compassion", "Sympathie", "Gentillesse", "Solidarité",
+                        "Respect", "Écoute active", "Attention", "Créativité", "Affection physique"
+                    ],
+                    pairs: {
+                        "Se mettre à la place de l'autre": "Empathie",
+                        "Ressentir de la peine pour quelqu'un": "Sympathie",
+                        "Aider ceux qui en ont besoin": "Compassion",
+                        "Sourire quand quelqu'un est heureux": "Gentillesse",
+                        "Dire 'je suis désolé' quand quelqu'un pleure": "Solidarité",
+                        "Partager ses jouets": "Respect",
+                        "Écouter sans interrompre": "Écoute active",
+                        "Demander 'comment ça va?'": "Attention",
+                        "Faire un dessin pour remonter le moral": "Créativité",
+                        "Faire un câlin si quelqu'un est triste": "Affection physique"
+                    }
+                },
+                teens: {
+                    concepts: [
+                        "Comprendre l'esprit de quelqu'un sans ressentir la même chose", "Rester bloqué dans ses propres règles",
+                        "Ressentir la douleur des autres comme la sienne", "Analyser les émotions des autres rationnellement",
+                        "Ignorer les perspectives différentes", "Être ému par la souffrance des autres",
+                        "Aider seulement par obligation", "Réfléchir avant de juger",
+                        "Critiquer sans connaître toute la situation", "Agir pour soulager la douleur des autres",
+                        "Éviter le contact émotionnel", "Se souvenir d'expériences personnelles similaires",
+                        "Feindre de l'intérêt pour les autres", "Accompagner sans besoin de parler",
+                        "Valider les sentiments des autres"
+                    ],
+                    words: [
+                        "Empathie cognitive", "Rigidité émotionnelle", "Empathie affective", "Analyse émotionnelle",
+                        "Préjugé", "Émotion forte", "Aide forcée", "Réflexion", "Critique injuste",
+                        "Action compatissante", "Distance émotionnelle", "Mémoire émotionnelle", "Fausseté",
+                        "Accompagnement", "Validation"
+                    ],
+                    pairs: {
+                        "Comprendre l'esprit de quelqu'un sans ressentir la même chose": "Empathie cognitive",
+                        "Rester bloqué dans ses propres règles": "Rigidité émotionnelle",
+                        "Ressentir la douleur des autres comme la sienne": "Empathie affective",
+                        "Analyser les émotions des autres rationnellement": "Analyse émotionnelle",
+                        "Ignorer les perspectives différentes": "Préjugé",
+                        "Être ému par la souffrance des autres": "Émotion forte",
+                        "Aider seulement par obligation": "Aide forcée",
+                        "Réfléchir avant de juger": "Réflexion",
+                        "Critiquer sans connaître toute la situation": "Critique injuste",
+                        "Agir pour soulager la douleur des autres": "Action compatissante",
+                        "Éviter le contact émotionnel": "Distance émotionnelle",
+                        "Se souvenir d'expériences personnelles similaires": "Mémoire émotionnelle",
+                        "Feindre de l'intérêt pour les autres": "Fausseté",
+                        "Accompagner sans besoin de parler": "Accompagnement",
+                        "Valider les sentiments des autres": "Validation"
+                    }
+                },
+                adults: {
+                    concepts: [
+                        "Se concentrer sur soi sous pression", "Action motivée par la compréhension émotionnelle",
+                        "Étiqueter les autres sans profondeur", "Prioriser les tâches sur les relations",
+                        "Pratiquer l'écoute sans distractions", "Supposer que tout le monde pense de même",
+                        "Reconnaître des émotions complexes chez les autres", "Blâmer avant de comprendre",
+                        "Proposer des solutions sans écouter", "Méditer pour réguler les réponses émotionnelles",
+                        "Nier les sentiments des autres", "Créer des espaces sûrs pour s'exprimer",
+                        "Juger basé sur des expériences passées", "Adapter la communication à l'état émotionnel de l'autre",
+                        "Se déconnecter des émotions inconfortables", "Apprendre des différentes cultures émotionnelles",
+                        "Répondre avec irritation à la douleur des autres", "Encourager l'autocritique saine",
+                        "Ignorer les signaux non verbaux", "Construire des ponts entre des perspectives opposées"
+                    ],
+                    words: [
+                        "Stress", "Empathie compatissante", "Jugement", "Productivité toxique", "Présence",
+                        "Biais", "Perception émotionnelle", "Culpabilité", "Solutions prématurées", "Pleine conscience",
+                        "Invalidation", "Sécurité émotionnelle", "Projection", "Communication adaptative",
+                        "Évitement", "Ouverture culturelle", "Frustration", "Connaissance de soi",
+                        "Cécité émotionnelle", "Médiation"
+                    ],
+                    pairs: {
+                        "Se concentrer sur soi sous pression": "Stress",
+                        "Action motivée par la compréhension émotionnelle": "Empathie compatissante",
+                        "Étiqueter les autres sans profondeur": "Jugement",
+                        "Prioriser les tâches sur les relations": "Productivité toxique",
+                        "Pratiquer l'écoute sans distractions": "Présence",
+                        "Supposer que tout le monde pense de même": "Biais",
+                        "Reconnaître des émotions complexes chez les autres": "Perception émotionnelle",
+                        "Blâmer avant de comprendre": "Culpabilité",
+                        "Proposer des solutions sans écouter": "Solutions prématurées",
+                        "Méditer pour réguler les réponses émotionnelles": "Pleine conscience",
+                        "Nier les sentiments des autres": "Invalidation",
+                        "Créer des espaces sûrs pour s'exprimer": "Sécurité émotionnelle",
+                        "Juger basé sur des expériences passées": "Projection",
+                        "Adapter la communication à l'état émotionnel de l'autre": "Communication adaptative",
+                        "Se déconnecter des émotions inconfortables": "Évitement",
+                        "Apprendre des différentes cultures émotionnelles": "Ouverture culturelle",
+                        "Répondre avec irritation à la douleur des autres": "Frustration",
+                        "Encourager l'autocritique saine": "Connaissance de soi",
+                        "Ignorer les signaux non verbaux": "Cécité émotionnelle",
+                        "Construire des ponts entre des perspectives opposées": "Médiation"
+                    }
+                }
+            }
+        };
+        
+        let currentLevel = 'kids';
+        let currentLanguage = 'es';
+        let correctAnswers = 0;
+        let wrongAnswers = 0;
+        let totalPairs = 0;
+        
+        function changeLanguage(lang) {
+            currentLanguage = lang;
+            updateTexts();
+            restartGame();
+        }
+        
+        function updateTexts() {
+            const t = translations[currentLanguage];
+            document.getElementById('title').textContent = t.title;
+            document.getElementById('subtitle').textContent = t.subtitle;
+            document.getElementById('description-title').textContent = t.descriptionTitle;
+            document.getElementById('description-text').textContent = t.descriptionText;
+            document.getElementById('benefits-title').textContent = t.benefitsTitle;
+            
+            const benefitsList = document.getElementById('benefits-list');
+            benefitsList.innerHTML = '';
+            t.benefitsList.forEach(item => {
+                const li = document.createElement('li');
+                li.textContent = item;
+                benefitsList.appendChild(li);
+            });
+            
+            document.getElementById('kids-btn').textContent = t.kidsBtn;
+            document.getElementById('teens-btn').textContent = t.teensBtn;
+            document.getElementById('adults-btn').textContent = t.adultsBtn;
+            document.getElementById('correct-title').textContent = t.correctTitle;
+            document.getElementById('wrong-title').textContent = t.wrongTitle;
+            document.getElementById('results-title').textContent = t.resultsTitle;
+            document.getElementById('restart-btn').textContent = t.restartBtn;
+        }
+        
+        function setLevel(level) {
+            currentLevel = level;
+            correctAnswers = 0;
+            wrongAnswers = 0;
+            totalPairs = Object.keys(gameData[currentLanguage][currentLevel].pairs).length;
+            updateScore();
+            setupGame();
+            document.getElementById('results').style.display = 'none';
+        }
+        
+        function setupGame() {
+            const conceptsDiv = document.getElementById('concepts');
+            const wordsDiv = document.getElementById('words');
+            const feedbackDiv = document.getElementById('feedback');
+            
+            conceptsDiv.innerHTML = '';
+            wordsDiv.innerHTML = '';
+            feedbackDiv.innerHTML = '';
+            
+            const concepts = [...gameData[currentLanguage][currentLevel].concepts].sort(() => Math.random() - 0.5);
+            const words = [...gameData[currentLanguage][currentLevel].words].sort(() => Math.random() - 0.5);
+            
+            concepts.forEach(concept => {
+                const div = document.createElement('div');
+                div.className = 'concept';
+                div.textContent = concept;
+                div.draggable = true;
+                div.id = 'concept-' + concept.replace(/\s+/g, '-');
+                div.addEventListener('dragstart', dragStart);
+                conceptsDiv.appendChild(div);
+            });
+            
+            words.forEach(word => {
+                const div = document.createElement('div');
+                div.className = 'word';
+                div.textContent = word;
+                div.id = 'word-' + word.replace(/\s+/g, '-');
+                div.addEventListener('dragover', dragOver);
+                div.addEventListener('drop', drop);
+                wordsDiv.appendChild(div);
+            });
+        }
+        
+        function dragStart(e) {
+            e.dataTransfer.setData('text/plain', e.target.textContent);
+        }
+        
+        function dragOver(e) {
+            e.preventDefault();
+        }
+        
+        function drop(e) {
+            e.preventDefault();
+            const concept = e.dataTransfer.getData('text/plain');
+            const word = e.target.textContent;
+            const feedbackDiv = document.getElementById('feedback');
+            
+            if (gameData[currentLanguage][currentLevel].pairs[concept] === word) {
+                e.target.style.background = '#4CAF50';
+                document.getElementById('concept-' + concept.replace(/\s+/g, '-')).classList.add('matched');
+                feedbackDiv.innerHTML = '✅ <strong>' + getRandomFeedback() + '</strong> +10 puntos!';
+                correctAnswers++;
+                updateScore();
+                
+                if (correctAnswers === totalPairs) {
+                    showFinalResults();
+                }
+            } else {
+                feedbackDiv.innerHTML = '❌ <strong>¡Ups!</strong> -5 puntos. Pista: ' + getHint(concept);
+                wrongAnswers++;
+                updateScore();
+            }
+        }
+        
+        function updateScore() {
+            document.getElementById('correct-score').textContent = correctAnswers;
+            document.getElementById('wrong-score').textContent = wrongAnswers;
+        }
+        
+        function showFinalResults() {
+            const resultsDiv = document.getElementById('results');
+            const finalScore = document.getElementById('final-score');
+            const finalMessage = document.getElementById('final-message');
+            
+            finalScore.innerHTML = `🏅 <strong>${currentLanguage === 'en' ? 'Final Score:' : currentLanguage === 'fr' ? 'Score Final:' : 'Puntuación Final:'}</strong> ${correctAnswers * 10} ${currentLanguage === 'en' ? 'points' : currentLanguage === 'fr' ? 'points' : 'puntos'}<br>
+                                   😊 <strong>${currentLanguage === 'en' ? 'Correct:' : currentLanguage === 'fr' ? 'Correctes:' : 'Aciertos:'}</strong> ${correctAnswers}<br>
+                                   😢 <strong>${currentLanguage === 'en' ? 'Wrong:' : currentLanguage === 'fr' ? 'Erreurs:' : 'Errores:'}</strong> ${wrongAnswers}`;
+            
+            let message = "";
+            const percentage = (correctAnswers / totalPairs) * 100;
+            
+            if (percentage >= 90) {
+                message = currentLanguage === 'en' ? "You're an empathy genius! Level: EXPERT 🌟" : 
+                         currentLanguage === 'fr' ? "Vous êtes un génie de l'empathie ! Niveau : EXPERT 🌟" :
+                         "¡Eres un genio de la empatía! Nivel: EXPERTO 🌟";
+            } else if (percentage >= 70) {
+                message = currentLanguage === 'en' ? "Great job! Level: ADVANCED 💪" : 
+                         currentLanguage === 'fr' ? "Excellent travail ! Niveau : AVANCÉ 💪" :
+                         "¡Muy bien! Nivel: AVANZADO 💪";
+            } else if (percentage >= 50) {
+                message = currentLanguage === 'en' ? "Good work! Level: INTERMEDIATE 👍" : 
+                         currentLanguage === 'fr' ? "Bon travail ! Niveau : INTERMÉDIAIRE 👍" :
+                         "¡Buen trabajo! Nivel: INTERMEDIO 👍";
+            } else {
+                message = currentLanguage === 'en' ? "Keep practicing! Empathy develops over time 😊" : 
+                         currentLanguage === 'fr' ? "Continuez à pratiquer ! L'empathie se développe avec le temps 😊" :
+                         "¡Sigue practicando! La empatía se desarrolla con el tiempo 😊";
+            }
+            
+            finalMessage.textContent = message;
+            resultsDiv.style.display = 'block';
+        }
+        
+        function restartGame() {
+            setLevel(currentLevel);
+        }
+        
+        function getRandomFeedback() {
+            const feedbacks = {
+                kids: {
+                    en: ["Amazing!", "You're a champion!", "Kids like you change the world!"],
+                    fr: ["Incroyable !", "Tu es un champion !", "Les enfants comme toi changent le monde !"],
+                    es: ["¡Increíble!", "¡Eres un campeón!", "¡Los niños como tú cambian el mundo!"]
+                },
+                teens: {
+                    en: ["You analyze like a psychologist!", "Your emotional intelligence is amazing!", "Perfect!"],
+                    fr: ["Tu analyses comme un psychologue !", "Ton intelligence émotionnelle est impressionnante !", "Parfait !"],
+                    es: ["¡Analizas como un psicólogo!", "¡Tu inteligencia emocional asombra!", "¡Perfecto!"]
+                },
+                adults: {
+                    en: ["Emotional mastery!", "Wisdom shows!", "Impressive!"],
+                    fr: ["Maîtrise émotionnelle !", "La sagesse se voit !", "Impressionnant !"],
+                    es: ["¡Maestría emocional!", "¡La sabiduría se nota!", "¡Impresionante!"]
+                }
+            };
+            return feedbacks[currentLevel][currentLanguage][Math.floor(Math.random() * feedbacks[currentLevel][currentLanguage].length)];
+        }
+        
+        function getHint(concept) {
+            const hints = {
+                "Ponerse en el lugar del otro": {
+                    en: "It's the most valued skill in relationships.",
+                    fr: "C'est la compétence la plus valorisée dans les relations.",
+                    es: "Es la habilidad más valorada en las relaciones."
+                },
+                "Sentir pena por alguien": {
+                    en: "Doesn't necessarily imply deep understanding.",
+                    fr: "N'implique pas nécessairement une compréhension profonde.",
+                    es: "No necesariamente implica comprensión profunda."
+                },
+                "Ayudar a quien lo necesita": {
+                    en: "Requires more than good intentions.",
+                    fr: "Nécessite plus que de bonnes intentions.",
+                    es: "Requiere más que buenas intenciones."
+                },
+                "Put yourself in someone else's shoes": {
+                    en: "It's the most valued skill in relationships.",
+                    fr: "C'est la compétence la plus valorisée dans les relations.",
+                    es: "Es la habilidad más valorada en las relaciones."
+                },
+                "Feeling sorry for someone": {
+                    en: "Doesn't necessarily imply deep understanding.",
+                    fr: "N'implique pas nécessairement une compréhension profonde.",
+                    es: "No necesariamente implica comprensión profunda."
+                },
+                "Helping those in need": {
+                    en: "Requires more than good intentions.",
+                    fr: "Nécessite plus que de bonnes intentions.",
+                    es: "Requiere más que buenas intenciones."
+                },
+                "Se mettre à la place de l'autre": {
+                    en: "It's the most valued skill in relationships.",
+                    fr: "C'est la compétence la plus valorisée dans les relations.",
+                    es: "Es la habilidad más valorada en las relaciones."
+                },
+                "Ressentir de la peine pour quelqu'un": {
+                    en: "Doesn't necessarily imply deep understanding.",
+                    fr: "N'implique pas nécessairement une compréhension profonde.",
+                    es: "No necesariamente implica comprensión profunda."
+                },
+                "Aider ceux qui en ont besoin": {
+                    en: "Requires more than good intentions.",
+                    fr: "Nécessite plus que de bonnes intentions.",
+                    es: "Requiere más que buenas intenciones."
+                }
+            };
+            
+            if (hints[concept]) {
+                return hints[concept][currentLanguage] || hints[concept]['es'];
+            }
+            
+            return currentLanguage === 'en' ? "Relate this concept to a basic emotional response." : 
+                   currentLanguage === 'fr' ? "Reliez ce concept à une réponse émotionnelle de base." :
+                   "Relaciona este concepto con una respuesta emocional básica.";
+        }
+        
+        window.onload = function() {
+            setLevel('kids');
+            updateTexts();
+        };
+    </script>
+</body>
+</html>
